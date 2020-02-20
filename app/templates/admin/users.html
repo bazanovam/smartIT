@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{%  import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}Department | Issues{% endblock %}
+
+{% block page_content %}
+<div class="col-md-6">
+  <div class="page-header text-center">
+    <h1>Users</h1>    
+  </div>  
+  <ul class="list-group">
+  {% for user in users_ %}
+    <li class="list-group-item">
+      <p>{{ user.username }}</p>
+    </li>
+  {% endfor %}
+  </ul>
+  
+</div>
+
+{% endblock %}

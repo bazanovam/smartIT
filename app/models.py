@@ -1,5 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask.ext.login import UserMixin
+from flask_login import UserMixin
 from . import db, login_manager
 
 
@@ -27,6 +27,23 @@ class Department(db.Model):
     name = db.Column(db.String(120), unique=True)
     dept_head = db.Column(db.Integer)
 
+class Status(db.Model):
+    '''This class creates a status
+    object.
+    '''
+    __tablename__ = 'statuses'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), unique=True)
+
+class Service(db.Model):
+    '''This class creates a service
+    object.
+    '''
+    __tablename__ = 'services'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), unique=True)
 
 class Issue(db.Model):
     '''This class creates issues objects
@@ -45,9 +62,35 @@ class Issue(db.Model):
                            backref=db.backref('issues', lazy='dynamic'))
 
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
-    department = db.relationship('Department',
-                                 backref=db.backref('departments',
-                                                    lazy='dynamic'))
+    # #department = db.relationship('Department',
+    #                              backref=db.backref('departments',
+    #                                                 lazy='dynamic'))
+
+class Request(db.Model):
+    '''This class creates Request objects
+    by user object
+    '''
+    __tablename__ = 'requests'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(70))
+    description = db.Column(db.Text)
+    priority = db.Column(db.String(10))
+    
+    closed = db.Column(db.Boolean, default=False)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user = db.relationship('User', backref=db.backref('requests', lazy='dynamic'))
+
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
+    department = db.relationship('Department', backref='departments')
+
+    status_id = db.Column(db.Integer, db.ForeignKey('statuses.id'))
+    status = db.relationship('Status', backref=db.backref('requests', lazy='dynamic'))
+
+    service_id = db.Column(db.Integer, db.ForeignKey('services.id'))
+    service = db.relationship('Service', backref=db.backref('requests', lazy='dynamic'))
+
 
 
 class Role(db.Model):

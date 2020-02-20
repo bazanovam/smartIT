@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{%  import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}Statuses | Requests{% endblock %}
+
+{% block page_content %}
+<div class="col-md-6">
+  <div class="page-header text-center">
+    <h1>Statuses</h1>    
+  </div>  
+  <ul class="list-group">
+  {% for status in statuses_ %}
+    <li class="list-group-item">
+      <p>{{ status.name }}</p>
+    </li>
+  {% endfor %}
+  </ul>
+  
+</div>
+<div class="col-md-6">
+<div class="page-header text-center">
+  <h1>Add status</h1>
+</div>
+  {{ wtf.quick_form(form) }}
+</div>
+{% endblock %}

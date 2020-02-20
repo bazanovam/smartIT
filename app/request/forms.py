@@ -2,37 +2,43 @@ from flask_wtf import Form
 from wtforms import StringField, TextAreaField, SelectField
 from wtforms import SubmitField, validators
 # from wtforms.ext.sqlalchemy.fields import QuerySelectField
-from ..models import Department
+from ..models import Department, Service
 
 
-class IssueForm(Form):
-    '''This class creates an IssueForm
+class RequestForm(Form):
+    '''This class creates an RequestForm
     object.
     '''
 
-    name = StringField('Issue',
-                       [validators.Required(message='We need an issue.'),
+    name = StringField('Request',
+                       [validators.Required(message='We need an Request.'),
                         validators.Length(
                            max=70,
                            message='Your \subject is a tad long.'
                        )
                        ]
                        )
-    description = TextAreaField('Issue Description',
+    description = TextAreaField('Request Description',
                                 [validators.required(
-                                    message='Please describe your issue.')])
+                                    message='Please describe your Request.')])
     priority = SelectField('Priority', choices=[
         ('high', 'High'), ('medium', 'Medium'), ('low', 'Low')])
     department = SelectField('Department',
                              [validators.Required(
                                  message='Department required.')],
                              coerce=int)
-    submit = SubmitField('Post Issue')
+    service = SelectField('Service',
+                             [validators.Required(
+                                 message='Service required.')],
+                             coerce=int)
+    submit = SubmitField('Post Request')
 
     def __init__(self, *args, **kwargs):
-        super(IssueForm, self).__init__(*args, **kwargs)
+        super(RequestForm, self).__init__(*args, **kwargs)
         self.department.choices = [
             (dept.id, dept.name) for dept in Department.query.all()]
+        self.service.choices = [
+            (service.id, service.name) for service in Service.query.all()]
 
 
 class CommentForm(Form):

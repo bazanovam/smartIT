@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}New request | request{% endblock %}
+
+<div class="row">
+{% block page_content %}
+
+  <div class="col-md-6">
+    <div class="page-header text-center">
+        <h1>Add request</h1>
+    </div>
+    {{ wtf.quick_form(form) }}
+  </div>
+{% endblock %}
+</div>

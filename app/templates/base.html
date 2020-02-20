@@ -1,75 +1,139 @@
-{% extends "bootstrap/base.html" %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-{% block title %}Issue Tracker{% endblock %}
+    <!-- Bootstrap CSS -->
+    {% block styles %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}" >
+    {% endblock styles%}
 
-{% block styles %}
-{{ super() }}
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-{% endblock styles%}
-
-{% block navbar %}
-<div class="navbar navbar-default" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="{{ url_for('issue.index') }}">Issues</a>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for('main.index') }}">Home</a></li>                
-                <li><a href="{{ url_for('issue.issue') }}">New Issue</a></li>
-                <li><a href="{{ url_for('issue.my_issue') }}">My Issues</a></li>                
-                {% endif %}
-                {% if current_user.is_admin %}
-                <li><a href="{{ url_for('admin.departments') }}">Departments</a></li>
-                {% endif %}
-               {#  {% if current_user.role.is_administartor %}
-                <li>
-                    <ul class="dropdown-menu">                    
-                    <li><a href="{{ url_for('admin.departments') }}">Admin Panel</a></li>
-                    </ul>    
-                </li>
-                {% endif %} #}
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                {% if current_user.is_authenticated %}
-                <li>
-                <a href="{{ url_for('auth.logout') }}"><i class="fa fa-sign-out"></i>Log Out</a>
-                </li>
-                <li><a href="#"><i class="fa fa-user"></i> {{ current_user.username|capitalize }}</a></li>
-                {% else %}
-                <li>
-                <a href="{{ url_for('auth.login') }}"><i class="fa fa-sign-in"></i> Log In</a>
-                </li>
-                <li>
-                <a href="{{ url_for('auth.register') }}"><i class="fa fa-user-plus"></i> Join Us</a>
-                </li>
-                {% endif %}
-            </ul>
+    <title>Smart IT</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">SmartIT</a>
+        <!-- <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> -->
+        <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+            {% if current_user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link p-2" href="#"><i class="fa fa-user"></i> {{ current_user.username|capitalize }}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link p-2" href="{{ url_for('auth.logout') }}"><i class="fa fa-sign-out"></i>Log Out</a>
+            </li>
+            
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link p-2" href="{{ url_for('auth.login') }}"><i class="fa fa-sign-in"></i> Log In</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link p-2" href="{{ url_for('auth.register') }}"><i class="fa fa-user-plus"></i> Join Us</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+  
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>REQUESTS</span>
+                        <a class="d-flex align-items-center text-muted" href="{{ url_for('request.request') }}">
+                        <span data-feather="plus-circle"></span>
+                        </a>
+                    </h6>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ url_for('request.index') }}">
+                                <span data-feather="shopping-cart"></span>
+                                My requests <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('request.index') }}">
+                            <span data-feather="file"></span>
+                            All requests
+                        </a>
+                        </li>
+                    </ul>
+            
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>SERVICES</span>
+                        <a class="d-flex align-items-center text-muted" href="#">
+                        <span data-feather="plus-circle"></span>
+                        </a>
+                    </h6>
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <span data-feather="file-text"></span>
+                                My services
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <span data-feather="file-text"></span>
+                                All services
+                            </a>
+                        </li>
+   
+                    </ul>
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>DICTIONARIES</span>
+                        <a class="d-flex align-items-center text-muted" href="#">
+                        </a>
+                    </h6>
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin.departments') }}">
+                                <span data-feather="file"></span>
+                                Departments
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin.statuses') }}">
+                                <span data-feather="file"></span>
+                                Statuses
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin.services') }}">
+                                <span data-feather="file"></span>
+                                Services
+                            </a>
+                        </li>
+   
+                    </ul>
+                </div>
+            </nav>
+            <div class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                {% block page_content %}{% endblock %}
+            </div>
         </div>
     </div>
-</div>
-{% endblock %}
 
-{% block content %}
-<div class="container">
-    {% for message in get_flashed_messages() %}
-    <div class="col-md-4 col-md-offset-4">
-        <div class="alert alert-warning text-center">    
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{ message }}
-        </div>
-    </div>    
-    {% endfor %}
 
-    {% block page_content %}{% endblock %}
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
     
-</div>
-{% endblock %}
+    <!-- Icons -->
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+
+    <script>
+      feather.replace()
+    </script>
+</body>
+</html>
+
+
+
 

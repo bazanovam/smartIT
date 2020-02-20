@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+<div calss="row">
+  <div class="col-auto">
+    <h1 class="h2">Requests</h1>
+  </div>
+</div>
+<div calss="row">
+  <div class="col-auto">
+    {% if total_requests == 0 %}
+    <div class="text-center">
+      <h1><i class=" text-success fa fa-check-circle"></i></h1>
+      <p class="lead">Looks like we are good here.</p>
+      <p class="lead text-success">{{ total_requests }} requests Open</p>
+      <a href="{{ url_for('request.request') }}" class="btn btn-success">Post an request</a>
+    </div>
+    {% else %}  
+
+      <div class="btn-group">
+        <a href="{{ url_for('request.index') }}" class="btn btn-primary btn-sm">All requests <span class="badge">{{ total_requests }}</span></button>
+        <a href="{{ url_for('request.index', state='open') }}" class="btn btn-danger btn-sm">Open requests <span class="badge">{{ open_requests }}</span></button>
+        <a href="{{ url_for('request.index', state='closed') }}" class="btn btn-success btn-sm">Closed requests <span class="badge">{{ closed_requests }}</span></a>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Priority</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for request in requests_ %}
+          
+          <tr class="{{'table-success' if request.status_id == 6}}">
+            <td><a href="{{ url_for('request.view', request_id=request.id) }}">REQ000{{ request.id }}</a></td>
+            <td>{{ request.name }}</td>
+            <td>{{ request.priority }}</td>
+            <td>{{ request.status.name }}</td>
+          </tr>
+        {% endfor %} 
+        </tbody>
+      </table>
+
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
+
+
+
+
+  <!-- <ul class="list-grup">
+      <a href="{{ url_for('request.view', request_id=request.id) }}" class="list-group-item">
+        <h4 class="list-group-item-heading">
+          {{ request.name }} <small>Priority: {{ request.priority }} raised by {{ request.user.username }}</small>
+        </h4>
+        <p class="list-group-item-text">
+        {% if request.closed %}
+        <i class=" text-success fa fa-check-circle fa-sm"></i>
+        {% else %}
+        <i class=" text-danger fa fa-exclamation-circle fa-sm"></i>
+        {% endif %}      
+        {{ request.description }}      
+        </p>
+        {% if current_user.is_admin %}
+        <p class="list-group-item-text">          
+          <form action="{{ url_for('request.closed') }}" method="POST">
+            <input type="hidden" value="{{ request.id }}" name="cl">
+            <select name="status" id="status" onchange="this.form.submit()">
+              {% for status in statuses %} 
+                <option value="{{ status.id }}" {% if status.id==request.status_id %} selected {% endif %} >{{ status.name }}</option>
+              {% endfor %}
+            </select>
+           <input type="submit" class="btn btn-default" value="Close"> 
+          </form>
+        </p>
+        {% endif %}
+      </a> 
+    </ul> -->
